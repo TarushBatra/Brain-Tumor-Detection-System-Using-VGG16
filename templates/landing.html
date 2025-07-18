@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainBuddy - Brain Tumor Detection and Classification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            background: url('/static/operating_room.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            position: relative;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(24, 28, 31, 0.55);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: transparent;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+        .navbar-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            margin-right: 32px;
+            color: #fff !important;
+            text-decoration: none;
+        }
+        .navbar .logo::before {
+            content: '';
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: url('https://img.icons8.com/ios-filled/50/ffffff/brain.png') no-repeat center center/cover;
+            margin-right: 12px;
+        }
+        .navbar .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .navbar .nav-actions a {
+            color: #fff !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: none;
+            border: none;
+            border-radius: 0;
+            padding: 0 8px;
+            transition: color 0.2s;
+            box-shadow: none;
+        }
+        .navbar .nav-actions a.active, .navbar .nav-actions a:hover {
+            color: #fff !important;
+            background: none;
+        }
+        .navbar .get-started-btn {
+            color: #2563eb;
+            background: #fff;
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 8px 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s, color 0.2s;
+            display: inline-block;
+            height: auto;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: none;
+            margin-left: 16px;
+            min-width: 120px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .navbar .get-started-btn:hover {
+            background: #e6edfa;
+            color: #174ea6;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 120px;
+            position: relative;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 32px;
+            color: #e0e0e0;
+        }
+        .hero .get-started-btn {
+            font-size: 1.2rem;
+            padding: 16px 40px;
+            border-radius: 10px;
+            background: #fff;
+            color: #181c1f;
+            border: 2px solid #181c1f;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: background 0.2s, color 0.2s;
+        }
+        .hero .get-started-btn:hover {
+            background: #181c1f;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 48px;
+            position: relative;
+            z-index: 2;
+        }
+        .feature-card {
+            background: rgba(255,255,255,0.10);
+            border-radius: 18px;
+            padding: 36px 32px;
+            min-width: 320px;
+            max-width: 360px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        .feature-card:hover {
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.16);
+        }
+        .feature-icon {
+            background: #4f8cff;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(79,140,255,0.18);
+        }
+        .feature-icon img {
+            width: 32px;
+            height: 32px;
+        }
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .feature-desc {
+            color: #e0e0e0;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 400;
+        }
+        @media (max-width: 900px) {
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            .feature-card {
+                min-width: 260px;
+                max-width: 90vw;
+            }
+        }
+        .whats-next-section {
+            margin-top: 56px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .whats-next-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            color: #fff;
+        }
+        .whats-next-steps {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .whats-next-step {
+            background: rgba(255,255,255,0.10);
+            border-radius: 18px;
+            padding: 36px 32px;
+            min-width: 320px;
+            max-width: 360px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(255,255,255,0.18);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.2s, background 0.2s;
+            margin-bottom: 24px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .whats-next-step:hover {
+            background: rgba(255,255,255,0.18);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.16);
+        }
+        .whats-next-step:visited, .whats-next-step:link, .whats-next-step:active {
+            color: inherit;
+            text-decoration: none;
+        }
+        .whats-next-circle {
+            background: #4f8cff;
+            color: #fff;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(79,140,255,0.18);
+        }
+        .whats-next-step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .whats-next-step-desc {
+            color: #e0e0e0;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 400;
+        }
+        @media (max-width: 900px) {
+            .whats-next-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            .whats-next-step {
+                min-width: 260px;
+                max-width: 90vw;
+            }
+        }
+        /* Ensure dropdown menu and items are visible on white background */
+        .dropdown-menu {
+            background: rgba(255, 255, 255, 0.98) !important;
+            min-width: 220px;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            margin-top: 12px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: fadeInUp 0.3s ease-out;
+        }
+        .dropdown-menu .dropdown-item {
+            color: #2c3e50 !important;
+            font-weight: 600 !important;
+            text-align: left;
+            opacity: 1 !important;
+            background: transparent !important;
+            text-shadow: none !important;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 4px 0;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-menu .dropdown-item i {
+            font-size: 1.1rem;
+            color: #007bff;
+            width: 20px;
+            text-align: center;
+        }
+        .dropdown-menu .dropdown-item:hover, .dropdown-menu .dropdown-item:focus {
+            background: rgba(0, 123, 255, 0.1) !important;
+            color: #007bff !important;
+            transform: translateX(4px);
+        }
+        .signout-btn {
+            background: #dc3545 !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            transition: all 0.2s ease;
+        }
+        .signout-btn i {
+            font-size: 1.1rem;
+        }
+        .signout-btn:hover, .signout-btn:focus {
+            background: #c82333 !important;
+            color: #fff !important;
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <a href="/" class="logo">BrainBuddy</a>
+            <div class="nav-actions">
+                <a href="/" class="active">Home</a>
+                <a href="/about">About</a>
+                <a href="/blog">Blog</a>
+                {% if session.user %}
+                    <div class="dropdown" style="display:inline-block;">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Account" style="font-size:1.5rem;">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/my-analyses">My Analyses</a></li>
+                            <li><a class="dropdown-item signout-btn" href="/signout">Sign Out</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="/signin">Sign In</a>
+                {% endif %}
+                <a href="/detect">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-title">Brain Tumor Detection and Classification</div>
+            <div class="hero-subtitle">TumorInsight provides a powerful model for easy detection and classification of Brain Tumors right at your fingertips.</div>
+            <a href="/detect" class="get-started-btn" style="display:inline-block;text-decoration:none;" target="_self">Get Started &rarr;</a>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="AI Detection">
+                    </div>
+                    <div class="feature-title">Advanced AI Detection</div>
+                    <div class="feature-desc">State-of-the-art deep learning models for accurate tumor detection.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <img src="https://img.icons8.com/ios-filled/50/ffffff/combo-chart--v1.png" alt="Real-time Analysis">
+                    </div>
+                    <div class="feature-title">Real-time Analysis</div>
+                    <div class="feature-desc">Get instant results with detailed confidence scores.</div>
+                </div>
+            </div>
+            <!-- Here's What's Next Section -->
+            <div class="whats-next-section">
+                <h2 class="whats-next-title">Here's What's Next:</h2>
+                <div class="whats-next-steps">
+                    <a href="/detect" class="whats-next-step">
+                        <div class="whats-next-circle">1.</div>
+                        <div class="whats-next-step-title">Submit Your MRI</div>
+                        <div class="whats-next-step-desc">Explain your pain and securely upload your MRI through our form.</div>
+                    </a>
+                    <a href="/detect" class="whats-next-step">
+                        <div class="whats-next-circle">2.</div>
+                        <div class="whats-next-step-title">Get a Clear Diagnosis</div>
+                        <div class="whats-next-step-desc">Receive a 99% accurate diagnosis with a clear plan towards relief.</div>
+                    </a>
+                </div>
+            </div>
+            <!-- End What's Next Section -->
+        </div>
+    </section>
+    <!-- Footer Start -->
+    <footer style="background: transparent; color: #fff; padding: 48px 0 24px 0; margin-top: 64px; font-family: 'Inter', Arial, sans-serif; position: relative; z-index: 101;">
+        <style>
+            .footer-link, .footer-section-title, .footer-copyright {
+                color: #fff !important;
+                font-family: 'Inter', Arial, sans-serif !important;
+            }
+            .footer-link {
+                font-weight: 600;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .footer-link:hover {
+                color: #fff !important;
+                text-decoration: none;
+            }
+            .footer-section-title {
+                font-weight: 600;
+                font-size: 1.1rem;
+                margin-bottom: 16px;
+            }
+            .footer-logo-text {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #fff !important;
+                letter-spacing: 1px;
+                font-family: 'Inter', Arial, sans-serif !important;
+            }
+            .footer-copyright {
+                font-weight: 400;
+                font-size: 1rem;
+            }
+        </style>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 40px; padding: 0 32px; color: #fff; font-family: 'Inter', Arial, sans-serif;">
+            <!-- Logo and Social -->
+            <div style="flex: 1 1 220px; min-width: 220px; display: flex; flex-direction: column; align-items: flex-start; color: #fff; font-family: 'Inter', Arial, sans-serif;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: #fff;">
+                    <img src='https://img.icons8.com/ios-filled/50/ffffff/brain.png' alt='BrainBuddy' style='width: 38px; height: 38px;'>
+                    <span class="footer-logo-text">BrainBuddy</span>
+                </div>
+                <div style="display: flex; gap: 18px; margin-top: 10px;">
+                    <a href="https://x.com/Tarush__" target="_blank" class="footer-link">
+                        <img src="https://img.icons8.com/ios-filled/30/ffffff/twitterx--v2.png" alt="Twitter" style="width: 28px; height: 28px;">
+                    </a>
+                    <a href="https://www.linkedin.com/in/tarush-batra-050569272/" target="_blank" class="footer-link">
+                        <img src="https://img.icons8.com/ios-filled/30/ffffff/linkedin.png" alt="LinkedIn" style="width: 28px; height: 28px;">
+                    </a>
+                </div>
+            </div>
+            <!-- Pages -->
+            <div style="flex: 1 1 160px; min-width: 160px; color: #fff; font-family: 'Inter', Arial, sans-serif;">
+                <div class="footer-section-title" style="text-decoration: underline;">Pages</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/" class="footer-link">Home</a>
+                    <a href="/about" class="footer-link">About</a>
+                    <a href="/blog" class="footer-link">Blog</a>
+                    <a href="/detect" class="footer-link">Get Started</a>
+                    <a href="/signin" class="footer-link">Sign In</a>
+                </div>
+            </div>
+            <!-- Services -->
+            <div style="flex: 1 1 180px; min-width: 180px; color: #fff; font-family: 'Inter', Arial, sans-serif;">
+                <div class="footer-section-title" style="text-decoration: underline;">Services</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="/detect" class="footer-link">Get Started</a>
+                </div>
+            </div>
+        </div>
+        <div style="max-width: 1200px; margin: 0 auto; border-top: 1px solid #333; margin-top: 36px; padding: 18px 32px 0 32px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; font-size: 1rem; color: #fff; font-family: 'Inter', Arial, sans-serif;">
+            <div class="footer-copyright">Copyright 2025. All Rights Reserved</div>
+            <div style="display: flex; gap: 24px;">
+                <a href="/privacy" class="footer-link">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer End -->
+    <!-- Bootstrap JS Bundle (for dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
