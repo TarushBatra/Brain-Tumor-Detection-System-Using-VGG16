@@ -11,11 +11,11 @@ from bson.objectid import ObjectId
 
 # Initialize Flask app
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Required for session management
-
+app.secret_key = os.environ.get('SECRET_KEY', 'dev')
 # MongoDB connection
 try:
-    client = MongoClient('mongodb+srv://tarushbatra11318:B73kirani@cluster0.klsqkci.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+    MONGO_URI = os.environ.get('MONGO_URI')
+    client = MongoClient(MONGO_URI)
     # Test the connection
     client.admin.command('ping')
     print("Successfully connected to MongoDB")
