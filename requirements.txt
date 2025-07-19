@@ -5,7 +5,7 @@ itsdangerous>=2.2.0
 click>=8.1.8
 blinker>=1.9.0
 MarkupSafe>=3.0.2
-tensorflow==2.15.0
+tensorflow==2.14.0
 keras>=3.0.0
 numpy>=1.24.3
 pillow>=10.0.0
