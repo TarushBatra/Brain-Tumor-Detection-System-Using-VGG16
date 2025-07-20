@@ -3,18 +3,21 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies and gdown for Google Drive download
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+    build-essential git wget python3-pip \
+    && pip install gdown \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy all project files
+COPY . .
+
+# Download the model file from Google Drive using gdown
+RUN gdown --id 1jvOXuZoufE6665hJu41GalmBiMjq14yO -O models/model.h5
+
 # Install Python dependencies
-COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-
-# Copy your app code
-COPY . .
 
 # Expose port 8080 for platform
 EXPOSE 8080
