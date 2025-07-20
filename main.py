@@ -148,6 +148,9 @@ def blog3():
 @app.route('/detect', methods=['GET', 'POST'])
 @login_required
 def detect():
+    user = session.get('user')
+    if not user or 'id' not in user:
+        return redirect(url_for('signin'))
     if request.method == 'POST':
         # Handle file upload
         file = request.files['file']
@@ -162,7 +165,7 @@ def detect():
             # Store the analysis result in the database
             try:
                 analysis_data = {
-                    'user_id': session['user']['id'],
+                    'user_id': user['id'],
                     'image_path': file_location,
                     'result': result,
                     'confidence': float(confidence),
@@ -196,9 +199,12 @@ def privacy():
 @app.route('/my-analyses', methods=['GET'])
 @login_required
 def my_analyses():
+    user = session.get('user')
+    if not user or 'id' not in user:
+        return redirect(url_for('signin'))
     # Get all analyses for the current user, sorted by timestamp (newest first)
     user_analyses = list(analysis_results.find(
-        {'user_id': session['user']['id']}
+        {'user_id': user['id']}
     ).sort('timestamp', -1))
     
     # Convert ObjectId to string for JSON serialization
@@ -215,10 +221,13 @@ def my_analyses():
 @app.route('/delete-analysis/<analysis_id>', methods=['POST'])
 @login_required
 def delete_analysis(analysis_id):
+    user = session.get('user')
+    if not user or 'id' not in user:
+        return redirect(url_for('signin'))
     # Find the analysis and verify it belongs to the current user
     analysis = analysis_results.find_one({
         '_id': ObjectId(analysis_id),
-        'user_id': session['user']['id']
+        'user_id': user['id']
     })
     
     if analysis:
