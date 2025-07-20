@@ -237,4 +237,4 @@ def delete_analysis(analysis_id):
     return redirect(url_for('my_analyses'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
